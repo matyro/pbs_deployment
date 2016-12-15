@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+	<environment>
+		<value name="production">ST_03_02_p15</value>		
+
+		<value name="resource">/home/magic/nobackup/resource/15-12-2016</value>
+		<value name="executable">/home/magic/executable</value>
+
+		<value name="corsika_dir">/home/magic/nobackup/corsika/_mmcs699</value>
+		<value name="refl_dir">/home/magic/nobackup/reflector</value>
+		<value name="camera_dir">/home/magic/nobackup/camera</value>	
+
+		<value name="qsub_args">-m a -M dominik.baack@udo.edu</value>
+		<value name="log_dir">/home/magic/nobackup/logs/{production}</value>
+
+		<value name="config_path">/home/magic/nobackup/config</value>
+
+	</environment>
+	<process name="camera_{id}" stdout="{log_dir}/output_camera.{id}" stderr="{log_dir}/stderr_camera.{id}" memory="1500MB" max_running="30" arguments="{qsub_args}"  config="{config_path}/camera">
+		<run exec="camera" name="camera"> 
+			<environment>
+				<value name="input1">refl_m1</value>
+				<value name="input2">refl_m2</value>
+				<value name="output1">m1.cam</value>
+				<value name="output2">m2.cam</value>
+				<value name="output_dat">dat.cam</value>
+				<value name="light">/home/magic/nobackup/StarResponse/</value>
+			</environment>
+			<copy time="before">
+				<file to="./">{executable}/camera</file>
+				<file to="./refl_m1">{refl_dir}/reflector_m1_{id}</file>
+				<file to="./refl_m2">{refl_dir}/reflector_m2_{id}</file>
+			</copy>			
+			<copy time="after">
+				<file to="camera_dir/reflector_m1_{id}">m1.cam</file>
+				<file to="camera_dir/reflector_m2_{id}">m2.cam</file>
+				<file to="camera_dir/reflector_dat_{id}">dat.cam</file>
+			</copy>
+		</run>
+	</process>  
+</simulation> 

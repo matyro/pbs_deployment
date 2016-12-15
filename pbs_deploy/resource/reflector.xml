@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<simulation>
+	<environment>
+		<value name="production">ST_03_02_p15</value>		
+
+		<value name="resource">/home/magic/nobackup/resource/15-12-2016</value>
+		<value name="executable">/home/magic/executable</value>
+
+		<value name="corsika_dir">/home/magic/nobackup/corsika/_mmcs699</value>
+		<value name="refl_dir">/home/magic/nobackup/reflector</value>
+		<value name="camera_dir">/home/magic/nobackup/camera</value>	
+
+		<value name="qsub_args">-m a -M dominik.baack@udo.edu</value>
+		<value name="log_dir">/home/magic/nobackup/logs/{production}</value>
+
+		<value name="config_path">/home/magic/nobackup/config</value>
+
+	</environment>
+	<process name="reflector_{id}" stdout="{log_dir}/stdout_reflector.{id}" stderr="{log_dir}/stderr_reflector.{id}" max_running="30" arguments="{qsub_args}" config="{config_path}/reflector">
+		<run exec="reflector" name="reflector"> 
+			<environment>
+				<value name="input">cer</value>
+				<value name="output1">m1.refl</value>
+				<value name="output2">m2.refl</value>
+			</environment>
+			<copy time="before">
+				<file to="./">{executable}/reflector</file>
+				<file to="./cer">{corsika_dir}/cer{id}</file>
+			</copy>			
+			<copy time="after">
+				<file to="{refl_dir}/reflector_m1_{id}">m1.refl</file>
+				<file to="{refl_dir}/reflector_m2_{id}">m2.refl</file>
+			</copy>
+		</run>		
+	</process>
+</simulation> 
