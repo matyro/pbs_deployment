@@ -1,5 +1,7 @@
 import subprocess as sp
 
+import xmltodict
+
 def queuedJobs(name_filter = ''):
         xml = sp.check_output(['qstat', '-u magic','-f', '-x']).decode()
         data = xmltodict.parse(xml)['Data']
